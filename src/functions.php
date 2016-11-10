@@ -15,6 +15,7 @@ use Deployer\Server\Environment;
 use Deployer\Task\Task as T;
 use Deployer\Task\Context;
 use Deployer\Task\GroupTask;
+use Deployer\Task\Scenario\ConditionalScenario;
 use Deployer\Task\Scenario\GroupScenario;
 use Deployer\Task\Scenario\Scenario;
 use Deployer\Type\Result;
@@ -172,14 +173,20 @@ function task($name, $body)
  *
  * @param string $it
  * @param string $that
+ * @param bool|callable|Closure $condition Optional; The condition upon which that specified task is executed.
+ *                                         Defaults to null;
  */
-function before($it, $that)
+function before($it, $that, $condition = null)
 {
     $deployer = Deployer::get();
     $beforeScenario = $deployer->scenarios->get($it);
     $scenario = $deployer->scenarios->get($that);
 
-    $beforeScenario->addBefore($scenario);
+    if ( $condition === null ) {
+        $beforeScenario->addBefore($scenario, $condition);
+    } else {
+        $beforeScenario->addBefore(new ConditionalScenario($scenario, $condition));
+    }
 }
 
 /**
@@ -187,14 +194,20 @@ function before($it, $that)
  *
  * @param string $it
  * @param string $that
+ * @param bool|callable|Closure $condition Optional; The condition upon which that specified task is executed.
+ *                                         Defaults to null;
  */
-function after($it, $that)
+function after($it, $that, $condition = null)
 {
     $deployer = Deployer::get();
     $afterScenario = $deployer->scenarios->get($it);
     $scenario = $deployer->scenarios->get($that);
 
-    $afterScenario->addAfter($scenario);
+    if ( $condition === null ) {
+        $afterScenario->addAfter($scenario, $condition);
+    } else {
+        $afterScenario->addAfter(new ConditionalScenario($scenario, $condition));
+    }
 }
 
 /**
