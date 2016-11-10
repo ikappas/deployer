@@ -172,6 +172,7 @@ function task($name, $body)
  *
  * @param string $it
  * @param string $that
+ * @return ScenarioInterface
  */
 function before($it, $that)
 {
@@ -180,6 +181,8 @@ function before($it, $that)
     $scenario = $deployer->scenarios->get($that);
 
     $beforeScenario->addBefore($scenario);
+
+    return $scenario;
 }
 
 /**
@@ -187,6 +190,7 @@ function before($it, $that)
  *
  * @param string $it
  * @param string $that
+ * @return ScenarioInterface
  */
 function after($it, $that)
 {
@@ -195,6 +199,8 @@ function after($it, $that)
     $scenario = $deployer->scenarios->get($that);
 
     $afterScenario->addAfter($scenario);
+
+    return $scenario;
 }
 
 /**
