@@ -29,13 +29,16 @@ class GroupScenario extends Scenario
     public function getTasks()
     {
         $tasks = [];
-        foreach ($this->group as $scenario) {
-            $tasks = array_merge($tasks, $scenario->getTasks());
+        if ($this->isEnabled()) {
+            foreach ($this->group as $scenario) {
+                $tasks = array_merge($tasks, $scenario->getTasks());
+            }
+            $tasks = array_merge(
+                $this->getBefore(),
+                $tasks,
+                $this->getAfter()
+            );
         }
-        return array_merge(
-            $this->getBefore(),
-            $tasks,
-            $this->getAfter()
-        );
+        return $tasks;
     }
 }
