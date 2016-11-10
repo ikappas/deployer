@@ -114,6 +114,15 @@ function serverList($file)
 }
 
 /**
+ * Define a task description to be used by the subsequent task definition.
+ *
+ * @param string $desc
+ */
+function desc($desc) {
+    set('last_description', $desc);
+}
+
+/**
  * Define a new task and save to tasks list.
  *
  * @param string $name Name of current task.
@@ -135,6 +144,14 @@ function task($name, $body)
         }, $body));
     } else {
         throw new \InvalidArgumentException('Task should be an closure or array of other tasks.');
+    }
+
+    if (has('last_description')) {
+        $desc = get('last_description');
+        if (!empty($desc)) {
+            $task->desc($desc);
+            set('last_description', null);
+        }
     }
 
     $deployer->tasks->set($name, $task);
