@@ -116,6 +116,9 @@ class BootstrapByConfigFile
         }
 
         foreach ($this->configFileContent as $key => $cnf) {
+            if (substr($key, 0, 1 ) === '.') {
+                continue;
+            }
             if (isset($cnf['cluster']) && $cnf['cluster']) {
                 $this->clusterConfig[$key] = $cnf;
             } else {
