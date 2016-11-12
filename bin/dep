@@ -96,9 +96,17 @@ if (is_readable($composerLockFile)) {
     }
 }
 
+$argv = $GLOBALS['argv'];
+if ( ! empty( $argv[1] ) && preg_match( '#^@[A-Za-z0-9-_]+$#', $argv[1], $matches ) ) {
+    $appName = array_shift( $argv );
+    $alias = array_shift( $argv );
+    array_unshift($argv, $appName);
+    array_push($argv,ltrim($alias, '@'));
+}
+
 // Init Deployer
 $console = new \Deployer\Console\Application('Deployer', $version);
-$input = new \Symfony\Component\Console\Input\ArgvInput();
+$input = new \Symfony\Component\Console\Input\ArgvInput($argv);
 $output = new \Symfony\Component\Console\Output\ConsoleOutput();
 $deployer = new \Deployer\Deployer($console, $input, $output);
 
